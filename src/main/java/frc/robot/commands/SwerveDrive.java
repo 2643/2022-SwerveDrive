@@ -7,8 +7,6 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-// import edu.wpi.first.networktables.NetworkTableEntry;
-// import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -45,7 +43,7 @@ public class SwerveDrive extends CommandBase {
   }
 
   private static double logAxis(double value) {
-    value = Math.copySign(Math.log((Math.abs(value) + 1)), value);
+    value = Math.copySign(Math.log((Math.abs(value) + 1)) / Math.log(2), value);
     return value;
   }
 
@@ -68,8 +66,8 @@ public class SwerveDrive extends CommandBase {
 
     //} else if(Constants.M_JOYSTICK == Swerve.JoystickConfiguration.RotationalJoystick) {
 
-    xAxisValue = () -> -logAxis(squareAxis(RobotContainer.bigdriveStick.getRawAxis(Constants.X_AXIS), 0.02)) * Constants.MAX_METERS_PER_SECOND;
-    yAxisValue = () -> -logAxis(squareAxis(RobotContainer.bigdriveStick.getRawAxis(Constants.Y_AXIS), 0.02)) * -Constants.MAX_METERS_PER_SECOND;
+    xAxisValue = () -> -squareAxis(logAxis(RobotContainer.bigdriveStick.getRawAxis(Constants.X_AXIS)), 0.02) * Constants.MAX_METERS_PER_SECOND;
+    yAxisValue = () -> -squareAxis(logAxis(RobotContainer.bigdriveStick.getRawAxis(Constants.Y_AXIS)), 0.02) * -Constants.MAX_METERS_PER_SECOND;
     //rotationalXAxisValue = () -> -logAxis(squareAxis(RobotContainer.bigdriveStick.getRawAxis(Constants.ROTATIONAL_AXIS), 0.75)) * -Constants.MAX_RADIANS_PER_SECOND; //* Swerve.speedAxis / 2;
     if(Math.round(Swerve.gyroTurn.getDouble(0)/5) == -Math.round(RobotContainer.m_swerve.gyroAngle().getDegrees()/5))
       rotationalXAxisValue = () -> 0;

@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 // import edu.wpi.first.math.geometry.Rotation2d;
 // import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -21,6 +22,7 @@ public class Auto extends SequentialCommandGroup {
   public Auto() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new SwerveDriveOdometry(new Pose2d(new Translation2d(1, 1), new Rotation2d(Math.toRadians(RobotContainer.m_swerve.gyroAngle().getDegrees())))));
+    //Translation is how many feet in x or y direction in FEET and Rotation2d is how many RADIANS to turn
+    addCommands(new SwerveDriveOdometry(new Pose2d(new Translation2d(1, 1), new Rotation2d(Math.PI/2))));//, new WaitCommand(1), new SwerveDriveOdometry(new Pose2d(new Translation2d(0, 0), new Rotation2d(0))));
   }
 }

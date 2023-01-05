@@ -4,8 +4,11 @@
       "/FMSInfo": "FMSInfo",
       "/LiveWindow/ExampleSubsystem": "Subsystem",
       "/LiveWindow/Swerve": "Subsystem",
+      "/LiveWindow/Ungrouped/Pigeon 2 [2]": "Gyro",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
-      "/Shuffleboard/Field/hi": "Field2d"
+      "/Shuffleboard/Field/2022-Field": "Field2d",
+      "/Shuffleboard/Field/hi": "Field2d",
+      "/Shuffleboard/Tab Name/Gyro": "Gyro"
     }
   }
 }

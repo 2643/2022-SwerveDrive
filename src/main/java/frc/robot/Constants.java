@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import com.swervedrivespecialties.swervelib.Mk4iSwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 
 import frc.robot.subsystems.Swerve;
@@ -44,29 +43,31 @@ public final class Constants {
     public static final int REAR_RIGHT_DRIVE_MOTOR = 12;
     public static final int REAR_RIGHT_TURN_MOTOR = 13;
     public static final double REAR_RIGHT_TURN_OFFSET = -Math.toRadians(274.82); //Needs tuning
-
-    public static double MAX_METERS_PER_SECOND = 19800 / 60 * SdsModuleConfigurations.MK4I_L1.getDriveReduction() * SdsModuleConfigurations.MK4I_L1.getWheelDiameter() * Math.PI;//Change based on max speed
-
-    //public static final double MAX_RADIANS_PER_SECOND = Math.PI;//Change based on how fast the turning motors turn
-    public static final double MAX_VOLTAGE = 12.5;
-    
-
-    
-
+        
     //joystick ports
     public static final int X_AXIS = 0;
     public static final int Y_AXIS = 1;
     public static final int ROTATIONAL_AXIS = 2;
 
+    //Chassis length/width and field/robot relative mode control
     public static final double TRANSLATION_2D_METERS = 0.625/2;
     public static final boolean FIELD_RELATIVE_MODE = true;
 
-    public static double MAX_RADIANS_PER_SECOND = MAX_METERS_PER_SECOND /
-    Math.hypot(TRANSLATION_2D_METERS, TRANSLATION_2D_METERS);
 
-    public static final double AUTONOMOUS_VELOCITY_PER_SECOND = 10;
+    //MAX SPEEDS 
+    public static double MAX_METERS_PER_SECOND = 19800 / 60 * SdsModuleConfigurations.MK4I_L1.getDriveReduction() * SdsModuleConfigurations.MK4I_L1.getWheelDiameter() * Math.PI;//Change based on max speed
+    public static double MAX_RADIANS_PER_SECOND = MAX_METERS_PER_SECOND /
+    Math.hypot(TRANSLATION_2D_METERS, TRANSLATION_2D_METERS); //12.773732
+    
+    public static final double AUTONOMOUS_VELOCITY_PER_SECOND = MAX_METERS_PER_SECOND;
     public static final double AUTONOMOUS_RADIANS_PER_SECOND = AUTONOMOUS_VELOCITY_PER_SECOND /
     Math.hypot(TRANSLATION_2D_METERS, TRANSLATION_2D_METERS);
+
+    public static final double MAX_VOLTAGE = 12.5;
+    
+
+
+
 
     public static final Swerve.JoystickConfiguration M_JOYSTICK = Swerve.JoystickConfiguration.RotationalJoystick;
 

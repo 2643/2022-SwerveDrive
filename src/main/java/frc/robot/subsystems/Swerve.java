@@ -7,10 +7,13 @@ package frc.robot.subsystems;
 import java.util.Map;
 
 import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.swervedrivespecialties.swervelib.Mk4iSwerveModuleHelper;
 //import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 import com.swervedrivespecialties.swervelib.Mk4iSwerveModuleHelper.GearRatio;
+
+import edu.wpi.first.hal.SimDevice;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -19,6 +22,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 //import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -27,6 +31,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -39,10 +44,15 @@ public class Swerve extends SubsystemBase {
   }
   //IMU
   Pigeon2 imu = new Pigeon2(Constants.PIGEON_CAN);
+  //WPI_Pigeon2 imu = new WPI_Pigeon2(Constants.PIGEON_CAN);
 
-  public Pose2d robotPosition = new Pose2d(new Translation2d(5, 5), new Rotation2d(Math.toRadians(0)));
+  public Pose2d robotPosition = new Pose2d(new Translation2d(0, 0), new Rotation2d(Math.toRadians(0)));
   NetworkTableEntry joystick_x = Shuffleboard.getTab("Joystick").add("X-Axis", 0).getEntry();
   NetworkTableEntry joystick_y = Shuffleboard.getTab("Joystick").add("Y-Axis", 0).getEntry();
+  NetworkTableEntry robot_x = Shuffleboard.getTab("Joystick").add("Robot-X-Axis", 0).getEntry();
+  NetworkTableEntry robot_y = Shuffleboard.getTab("Joystick").add("Robot-Y-Axis", 0).getEntry();
+
+
 
   public static double speedAxis;
 
@@ -54,7 +64,7 @@ public class Swerve extends SubsystemBase {
 
   //Kinematics and Odometry for Swerve Drive
   SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
-  SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(m_kinematics, gyroAngle(), robotPosition);
+  public SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(m_kinematics, gyroAngle(), robotPosition);
 
   //Show status of each module(velocity, offset, etc)
   ShuffleboardLayout frontLeftModuleStateShuffleboard = Shuffleboard.getTab("Modulestates").getLayout("Front Left Module", BuiltInLayouts.kList).withSize(2, 3).withPosition(0, 0);
@@ -66,8 +76,8 @@ public class Swerve extends SubsystemBase {
   public static NetworkTableEntry gyroTurn = Shuffleboard.getTab("Joystick").add("Gyro", 0).getEntry();
   NetworkTableEntry currentGyroAngle = Shuffleboard.getTab("Joystick").add("Gyro Angle(Current)", 0).getEntry();
 
-  ComplexWidget fieldShuffleboard = Shuffleboard.getTab("Field").add("hi", field).withWidget(BuiltInWidgets.kField).withProperties(Map.of("robot icon size", 20));
-  //ComplexWidget gyroShufffleboard = Shuffleboard.getTab("Gyro").a Widget(BuiltInWidgets.kGyro);
+  ComplexWidget fieldShuffleboard = Shuffleboard.getTab("Field").add("2022-Field", field).withWidget(BuiltInWidgets.kField).withProperties(Map.of("robot icon size", 20));
+  //ComplexWidget gyroShufffleboard = Shuffleboard.getTab("Tab Name").add("Gyro", (WPI_Pigeon2)imu);
 
   //Starting ChassisSpeed
   ChassisSpeeds speeds = new ChassisSpeeds(0.0, 0.0, 0);
@@ -81,7 +91,8 @@ public class Swerve extends SubsystemBase {
 
   public Swerve() {
     //Shuffleboard.getTab("Joystick").add(imu);
-    //imu.setYaw(0);
+    imu.setYaw(0);
+    m_odometry.resetPosition(new Pose2d(0, 0, new Rotation2d(0)), gyroAngle());
   }
    
   public void setChasisSpeed(ChassisSpeeds speed){
@@ -130,8 +141,10 @@ public class Swerve extends SubsystemBase {
 
     m_odometry.update(gyroAngle(), moduleStates[0], moduleStates[1], moduleStates[2], moduleStates[3]);
     robotPosition = m_odometry.getPoseMeters();
+
     field.setRobotPose(robotPosition);
-    System.out.println("X: " + robotPosition.getX() + " Y: " + robotPosition.getY());
-    
+    robot_x.setDouble(m_odometry.getPoseMeters().getX());
+    robot_y.setDouble(m_odometry.getPoseMeters().getY());
+    //gyroShufffleboard.setDouble(Math.random() * 360);
   }
 }
